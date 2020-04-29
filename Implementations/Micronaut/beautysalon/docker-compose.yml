@@ -1,0 +1,56 @@
+version: "3.7"
+services:
+  consul:
+    image: consul:1.2.4
+    ports:
+      - "8500:8500"
+  zipkin:
+    image: openzipkin/zipkin:2.17.0
+    ports:
+      - "9411:9411"
+  rabbitmq:
+    image: rabbitmq:3.7.11-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  treatments-db:
+    image: redis:5
+  appointments-db:
+    image: postgres:10.5-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: appointments
+  treatments:
+    build: ./treatments
+    image: beautysalon-micronaut/treatments:1.0 
+    ports:
+      - "8080:8080"
+    restart: on-failure
+    depends_on:
+     - consul
+     - zipkin
+     - treatments-db
+  appointments:
+    build: ./appointments
+    image: beautysalon-micronaut/appointments:1.0 
+    ports:
+      - "8081:8081"
+    restart: on-failure
+    depends_on:
+      - consul
+      - zipkin
+      - rabbitmq
+      - appointments-db
+  confirmation:
+    build: ./confirmation
+    image: beautysalon-micronaut/confirmation:1.0 
+    ports:
+        - "8082:8082"
+    restart: on-failure
+    depends_on:
+        - consul
+        - zipkin
+        - rabbitmq

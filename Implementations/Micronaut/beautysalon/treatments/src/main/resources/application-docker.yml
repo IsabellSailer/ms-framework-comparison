@@ -1,0 +1,65 @@
+micronaut:
+  application:
+    name: treatments
+  config-client:
+    enabled: true
+  security:
+    enabled: true
+    endpoints:
+      login:
+        enabled: true 
+    interceptUrlMap:
+      - pattern: /swagger/*
+        httpMethod: GET
+        access:
+          - isAnonymous()
+  router:
+    versioning:
+      enabled: true
+      parameter:
+        enabled: false 
+        names: 'v,api-version' 
+      header:
+        enabled: true 
+        names: 
+          - 'X-API-VERSION'
+          - 'Accept-Version'
+    static-resources:
+      swagger:
+        paths: classpath:META-INF/swagger
+        mapping: /swagger/**
+  metrics:
+    enabled: true
+  server:
+    port: 8080
+  caches:
+    discovery-client:
+      enabled: false
+          
+endpoints:
+  health:
+    enabled: true
+    sensitive: false
+    details-visible: ANONYMOUS 
+  metrics:
+    enabled: true
+    sensitive: false
+
+tracing:
+  zipkin:
+    http:
+      url: http://zipkin:9411
+    enabled: true
+    sampler:
+      probability: 1 
+
+consul:
+  client:
+    defaultZone: "${CONSUL_HOST:consul}:${CONSUL_PORT:8500}"
+    config:
+      format: YAML
+    registration:
+      enabled: true             
+              
+redis:
+  uri: "redis://${REDIS_HOST:treatments-db}:${REDIS_PORT:6379}"        

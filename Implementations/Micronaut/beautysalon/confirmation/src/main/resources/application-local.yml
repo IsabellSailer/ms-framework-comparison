@@ -1,0 +1,50 @@
+micronaut:
+  application:
+    name: confirmation
+  config-client:
+    enabled: true
+  metrics:
+    enabled: true
+  server:
+    port: -1
+  caches:
+    discovery-client:
+      enabled: false
+          
+endpoints:
+  health:
+    enabled: true
+    sensitive: false
+    details-visible: ANONYMOUS 
+  metrics:
+    enabled: true
+    sensitive: false
+
+tracing:
+  zipkin:
+    http:
+      url: http://localhost:9411
+    enabled: true
+    sampler:
+      probability: 1 
+
+consul:
+  client:
+    defaultZone: "${CONSUL_HOST:localhost}:${CONSUL_PORT:8500}"
+    config:
+      format: YAML
+    registration:
+      enabled: true        
+                             
+jpa:
+  default:
+    packages-to-scan:
+      - 'beautysalon.confirmation' 
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+        show_sql: true
+
+rabbitmq:
+  host: "localhost"
