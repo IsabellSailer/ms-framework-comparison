@@ -1,0 +1,1 @@
+nameko run --config config-docker.yml treatments.service

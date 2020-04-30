@@ -1,0 +1,130 @@
+openapi: 3.0.0
+info:
+  title: Appointments API
+  version: '0.1'
+  description: API of the Appointments Microservice
+security:
+  - oauth2:
+      - uid
+paths:
+  /appointments/list:
+    get:
+      tags:
+        - appointments
+      operationId: get_appointments
+      summary: Get all appointments
+      parameters:
+        - name: request
+          in: query
+          schema:
+            type: object
+      responses:
+        '200':
+          description: List of all booked Appointments
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Appointment'
+                properties:
+                  appointments:
+                    type: string
+        '404':
+          description: No stored Appointments
+        '500':
+          description: Connection Error to Database 
+
+  '/appointments/{appointment_id}':
+    get:
+      tags:
+        - Appointment
+      operationId: get_appointment
+      summary: Get a single Appointment
+      parameters:
+        - name: request
+          in: query
+          schema:
+            type: object
+      responses:
+        '200':
+          description: Details for the requested Appointment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/parameters/appointment_id'
+        '404':
+          description: No Appointment for given ID
+        '500':
+          description: Connection Error to Database 
+
+  /appointments:
+    post:
+      operationId: create_appointment
+      summary: Add a new Appointment
+      parameters:
+        - name: request
+          in: query
+          schema:
+            type: object
+      requestBody:
+        description: The appointment in json format.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Appointment'
+      responses:
+        '201':
+          description: Created
+        '404':
+          description: No Treatment for given ID
+        '409':
+          description: Appointment Details do not match the requirements
+        '500':
+          description: Connection Error  
+
+components:
+  parameters:
+    appointment_id:
+      name: appointment_id
+      description: Appointment's Unique identifier
+      in: path
+      required: true
+      schema:
+        type: int
+        pattern: '[0-9]'
+  schemas:
+    Appointment:
+      type: object
+      required:
+        - customer_name
+        - treatment_id
+        - treatment_name
+        - date
+        - start_time
+        - end_time
+      properties:
+        id:
+          type: integer
+          description: Unique identifier
+          readOnly: true
+        customer_name:
+          type: string
+          description: Customer Name
+        treatment_id:
+          type: integer
+          description: ID of the Treatment
+        treatment_name:
+          type: object
+          description: Name of the Treatment
+        date:
+          type: string
+          format: date
+          description: Date of the Appointment
+        start_time:
+          type: integer
+          description: Start Time
+        end_time:
+          type: integer
+          description: End Time
+

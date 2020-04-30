@@ -1,0 +1,17 @@
+REDIS_URI: redis://${REDIS_HOST:treatments-db}:${REDIS_PORT:6379}/${REDIS_INDEX:11}
+
+WEB_SERVER_ADDRESS: 0.0.0.0:8080
+
+LOGGING:
+    version: 1
+    formatters:
+        tracer:
+            (): nameko_tracer.formatters.JSONFormatter
+    handlers:
+        tracer:
+            class: logging.StreamHandler
+            formatter: tracer
+    loggers:
+        nameko_tracer:
+            level: INFO
+            handlers: [tracer]

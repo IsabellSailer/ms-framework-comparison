@@ -1,0 +1,51 @@
+version: "3.7"
+services:
+  graphite:
+    image: graphiteapp/graphite-statsd:1.1.5-13
+    ports:
+      - "80:80"
+      - "2003-2004:2003-2004"
+      - "2023-2024:2023-2024"
+      - "8125:8125/udp"
+      - "8126:8126"
+  rabbitmq:
+    image: rabbitmq:3.7.11-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  treatments-db:
+    image: redis:5
+  appointments-db:
+    image: postgres:10.5-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: appointments
+  treatments:
+    build: ./treatments
+    image: beautysalon-nameko/treatments:1.0 
+    ports:
+      - "8080:8080"
+    restart: on-failure
+    depends_on:
+      - treatments-db
+  appointments:
+    build: ./appointments
+    image: beautysalon-nameko/appointments:1.0 
+    ports:
+      - "8081:8081"
+    restart: on-failure
+    depends_on:
+      - graphite
+      - rabbitmq
+      - appointments-db
+  confirmation:
+    build: ./confirmation
+    image: beautysalon-nameko/confirmation:1.0 
+    ports:
+      - "8082:8082"
+    restart: on-failure
+    depends_on:
+      - rabbitmq

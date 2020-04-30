@@ -1,0 +1,17 @@
+AMQP_URI: amqp://${RABBIT_USER:guest}:${RABBIT_PASSWORD:guest}@${RABBIT_HOST:localhost}:${RABBIT_PORT:5672}/
+
+WEB_SERVER_ADDRESS: 0.0.0.0:8082
+
+LOGGING:
+    version: 1
+    formatters:
+        tracer:
+            (): nameko_tracer.formatters.JSONFormatter
+    handlers:
+        tracer:
+            class: logging.StreamHandler
+            formatter: tracer
+    loggers:
+        nameko_tracer:
+            level: INFO
+            handlers: [tracer]

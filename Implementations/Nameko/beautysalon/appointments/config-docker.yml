@@ -1,0 +1,29 @@
+AMQP_URI: amqp://${RABBIT_USER:guest}:${RABBIT_PASSWORD:guest}@${RABBIT_HOST:rabbitmq}:${RABBIT_PORT:5672}/
+
+DB_URIS:
+    "appointments:Base": postgresql://${DB_USER:postgres}:${DB_PASSWORD:docker}@${DB_HOST:appointments-db}:${DB_PORT:5432}/${DB_NAME:appointments}
+
+WEB_SERVER_ADDRESS: 0.0.0.0:8081
+
+STATSD:
+  prod:
+    enabled: true
+    protocol: "udp"
+    host: "graphite"
+    port: 8125
+    prefix: "prefix-1"
+    maxudpsize: 512
+
+LOGGING:
+    version: 1
+    formatters:
+        tracer:
+            (): nameko_tracer.formatters.JSONFormatter
+    handlers:
+        tracer:
+            class: logging.StreamHandler
+            formatter: tracer
+    loggers:
+        nameko_tracer:
+            level: INFO
+            handlers: [tracer]
