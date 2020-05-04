@@ -1,0 +1,48 @@
+<html><head><style>
+        body {
+            font-family:'Courier New';
+        }
+        .picture {
+            padding-top:50px;
+            text-align:center;
+        }
+
+        .link:hover {
+            fill: #660000;
+        }
+        .dependency-map {
+            padding:20px;
+        }
+        .input-operation {
+            width:50%;
+        }
+       .dependency-table {
+            width: 100%;
+            border: 1px solid #444;
+            padding: 10px;
+        }
+
+        .dependency-table a {
+            color: black;
+            text-decoration: none;
+        }
+
+
+        .dependency-table a:hover {
+            color: #600;
+        }
+
+        .dependency-table th {
+            text-align: left;
+        }
+
+        .dependency-list {
+            background-color: #ddd;
+            padding-left: 20%;
+        }
+        .legenda {
+            font-size: 12px;
+            font-style: italic;
+            color: #888;
+        }
+    </style></head><body><table width='100%'><tr><td valign='top' class='picture' width='50%'><svg height='460' width='800'><polygon points='300,80 300,380 500,460 500,0' style='fill:#ffcc00;stroke:#cc6600;stroke-width:2' /><polygon points='275,230 300,255 325,230 300,205 ' style='fill:#ffff66;stroke:#cc9900;stroke-width:2' /><a xlink:href='CONFIRMATIONIPort.html'><text class='link' x='265' y='220' text-anchor='end' fill='black' font-family='Courier New' font-weight='bold'>CONFIRMATION</text></a><text x='285' y='235'  font-size='10px' fill='black' font-family='Courier New'>sodep</text><text x='265' y='250' text-anchor='end'  font-size='10px' fill='black' font-family='Courier New'>socket://localhost:8003</text><line x1='0' y1='230' x2='275' y2='230' style='stroke:#ddd;stroke-width:1'/><polygon points='500,180 525,155 500,130 '  style='fill:#ff0000;stroke:#000000;stroke-width:2' /><a xlink:href='ConsoleOPort.html'><text class='link' x='535' y='145' fill='black' font-family='Courier New' font-weight='bold'>Console</text></a><text x='535' y='175' fill='black' font-size='10px' font-family='Courier New'>local,</text><line x1='525' y1='155' x2='800' y2='155' style='stroke:#ddd;stroke-width:1'/><polygon points='500,330 525,305 500,280 '  style='fill:#ff0000;stroke:#000000;stroke-width:2' /><a xlink:href='SwingUIOPort.html'><text class='link' x='535' y='295' fill='black' font-family='Courier New' font-weight='bold'>SwingUI</text></a><text x='535' y='325' fill='black' font-size='10px' font-family='Courier New'>local,</text><line x1='525' y1='305' x2='800' y2='305' style='stroke:#ddd;stroke-width:1'/></svg></td><td valign='top' class='dependency-map'><h1>Dependency Map</h1><span class='legenda'>Legenda:</span><br><table class='dependency-table'><tr><th class='input-operation'>input operation</th></tr><tr><td class='dependency-list'><i>communication dependencies</i></td></tr></tr></table><br><br><table class='dependency-table'><tr><td colspan='2' class='input-operation'>confirmAppointment</td></tr><tr><td class='dependency-list'><table width='100%'><tr><td>showMessageDialog@<b><a href='SwingUIOPort.html'>SwingUI</a></b></td></tr></table></td></tr></table><td></table></body></html>

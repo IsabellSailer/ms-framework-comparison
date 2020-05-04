@@ -1,0 +1,206 @@
+<html><head><style>
+                body {
+        font-family: Verdana, Helvetica, sans-serif;
+    }
+
+    .resource-label {
+        height:40px;
+        font-size: 14px;
+        text-align:center;
+        color:white;
+        font-weight:bold;
+        border-radius:5px;
+        width:6%;
+    }
+
+    a {
+        font-weight:bold;
+        text-decoration:none;
+        color: #600;
+    }
+
+    tr:hover td:not(:first-child) {
+ 	    background-color: #ffffcc;
+    }
+
+
+    .type-definition a:hover {
+        color: #aa0000;
+    }
+
+    .type-definition {
+        margin-left:30px;
+        margin-top:50px;
+        width:90%;
+    }
+    .type-definition th {
+        font-size:20px;
+        text-align: left;
+        background-color: #fff;
+        color:black;
+        border-radius:5px;
+    }
+ 	.type-definition th.content-td{
+        border-bottom:1px solid #555;
+        border-radius:0px;
+    }
+    .type-definition tr td {
+
+        border-bottom:1px dotted #ddd;
+	}
+    .type-definition tr td:first-child {
+        border-bottom:0px;
+	}
+
+    .type-definition .resource-label-type {
+        background-color: red;
+        color:white;
+        text-align:center;
+        font-size:14px;
+    }
+
+    .content-td {
+        padding-left: 20px;
+        width: 30%;
+        background-color: #eee;
+        padding-bottom: 5px;
+        padding-top: 5px;
+        border-radius: 5px;
+        font-size: 15px;
+        font-family: 'Courier New';
+    }
+    .documentation {
+        font-style: italic;
+    }
+
+    .interface-definition {
+        margin-left:30px;
+        margin-top:50px;
+        width:90%;
+    }
+
+    .interface-definition .resource-label-interface {
+        background-color: #107710;
+        color:white;
+        text-align:center;
+        font-size:14px;
+    }
+
+    .interface-definition th {
+        font-size:20px;
+        text-align: left;
+        background-color: #fff;
+        color:black;
+        border-radius:5px;
+    }
+
+ 	.interface-definition th.content-td{
+        border-bottom:1px solid #555;
+        border-radius:0px;
+    }
+
+    .operation-name {
+        font-weight: bold;
+        font-size:18px;
+        padding-left:20px;
+    }
+
+    .operation-button {
+        font-size: 10px;
+        border: 1px solid #666;
+        padding: 4px;
+        margin-right: 10px;
+        float: right;
+        cursor: pointer;
+    }
+
+    .operation-button:hover {
+        background-color:#666;
+        color:white;
+    }
+
+    .rr-type {
+        background-color:#929900;
+        color:white;
+    }
+
+    .ow-type {
+        background-color:#cca133;
+        color:white;
+    }
+
+    .message-type {
+        font-style:italic;
+        font-size:12px;
+        color:#444;
+    }
+
+    .interface-definition a {
+        font-size: 14px;
+    }
+
+    .interface-definition .content-td {
+        padding-top:10px;
+        padding-bottom:10px;
+        width:32%;
+    }
+
+    .fault-name {
+        font-size:14px;
+    }
+
+        .port-definition a {
+        font-size: 14px;
+        color: #050;
+    }
+
+    .port-definition th.content-td{
+        border-bottom:1px solid #555;
+        border-radius:0px;
+    }
+
+    .port-definition .resource-label-ip {
+        background-color: blue;
+        color:white;
+        text-align:center;
+        font-size:14px;
+    }
+
+    .port-definition .resource-label-op {
+        background-color: black;
+        color:white;
+        text-align:center;
+        font-size:14px;
+    }
+
+    .port-definition th {
+        font-size: 20px;
+        text-align: left;
+        background-color: #fff;
+        color: black;
+    }
+
+    .port-definition {
+        margin-left:30px;
+        margin-top:50px;
+        width:90%;
+    }
+
+    .port-element {
+        font-weight: bold;
+    }
+
+    .port-definition .content-td {
+        width:44%;
+    }
+    </style><script>
+        function openDetails( operation ) {
+            if ( document.getElementById( "doc_" + operation ).style.display == "none" ) {
+                document.getElementById( "doc_" + operation ).style.display = "table-row";
+                document.getElementById( "faults_" + operation ).style.display = "table-row"
+            } else {
+                document.getElementById( "doc_" + operation ).style.display = "none";
+                document.getElementById( "faults_" + operation ).style.display = "none"
+            }
+        }
+    </script></head><body><table class='port-definition'><tr><th class='resource-label-ip resource-label'>ip</th><th id='GETTREATMENT' colspan='2' class='content-td'>GETTREATMENT</th></tr><tr><td></td><td class='content-td port-element'>Location:</td><td class='content-td'>socket://localhost:8002/</td></tr><tr><td></td><td class='content-td port-element'>Protocol:</td><td class='content-td'>http</td></tr><tr><td></td><td class='content-td port-element'>Interfaces:</td><td class='content-td'><a href='#'>TreatmentInterface<a>&nbsp;&nbsp;</td></tr></table><hr><table class='interface-definition'><tr><th id='TreatmentInterface' class='resource-label-interface resource-label'>intf</th><th id='TreatmentInterface' colspan='3' class='content-td'>TreatmentInterface</th></tr><tr><td>&nbsp;</td></tr><tr><td></td><td colspan='4' class='documentation'> This Service is responsible for the management of treatments. </td></tr><tr><td>&nbsp;</td></tr><tr><td class='resource-label rr-type'>rr</td><td class='content-td operation-name'><span>getTreatment</span><button onclick='openDetails("getTreatment")' class='operation-button'>Details</button></td><td class='content-td'><span class='message-type'>Request:</span><a href='#GetTreatmentRequest'>GetTreatmentRequest</a></td><td class='content-td'><span class='message-type'>Response:</span><a href='#Treatment'>Treatment</a></td></tr></td></tr><tr id='doc_getTreatment' style='display:none'><td></td><td colspan='3' class='documentation'> Returns all Information for the requested Treatment </td><tr><tr><td><br></td></tr><tr><td class='resource-label rr-type'>rr</td><td class='content-td operation-name'><span>getTreatments</span><button onclick='openDetails("getTreatments")' class='operation-button'>Details</button></td><td class='content-td'><span class='message-type'>Request:</span><a href='#GetTreatmentsRequest'>GetTreatmentsRequest</a></td><td class='content-td'><span class='message-type'>Response:</span><a href='#GetTreatmentsResponse'>GetTreatmentsResponse</a></td></tr></td></tr><tr id='doc_getTreatments' style='display:none'><td></td><td colspan='3' class='documentation'> Shows a list of all offered Treatments </td><tr><tr><td><br></td></tr><tr><td class='resource-label rr-type'>rr</td><td class='content-td operation-name'><span>createTreatment</span><button onclick='openDetails("createTreatment")' class='operation-button'>Details</button></td><td class='content-td'><span class='message-type'>Request:</span><a href='#Treatment'>Treatment</a></td><td class='content-td'><span class='message-type'>Response:</span><a href='#CreateTreatmentResponse'>CreateTreatmentResponse</a></td></tr></td></tr><tr id='doc_createTreatment' style='display:none'><td></td><td colspan='3' class='documentation'> Saves a new Treatment </td><tr><tr><td><br></td></tr></table><hr><table class='type-definition'><tr><th class='resource-label-type resource-label'>type</th><th id='GetTreatmentRequest' colspan='2' class='content-td'>GetTreatmentRequest</th></tr><tr><td>&nbsp;</td></tr><tr><td></td><td colspan='2' class='documentation'> Requests one Treatment </td></tr><tr><td>&nbsp;</td></tr><tr><td></td><td class='content-td'><b>type</b> GetTreatmentRequest<b>:</b>&nbsp;<b>void</b>{</td><td></td></tr><tr><td></td><td class='content-td'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.treatmentId[1,1]:&nbsp;<b>int</b></td><td class='documentation'></td></tr><tr><td></td><td class='content-td'>}</td><td></td></tr></table><table class='type-definition'><tr><th class='resource-label-type resource-label'>type</th><th id='Treatment' colspan='2' class='content-td'>Treatment</th></tr><tr><td>&nbsp;</td></tr><tr><td></td><td class='content-td'><b>type</b> Treatment<b>:</b>&nbsp;<b>void</b>{</td><td></td></tr><tr><td></td><td class='content-td'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.maxduration[1,1]:&nbsp;<b>int</b></td><td class='documentation'> Maximum Duration</td></tr><tr><td></td><td class='content-td'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.price[1,1]:&nbsp;<b>int</b></td><td class='documentation'> Price</td></tr><tr><td></td><td class='content-td'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.name[1,1]:&nbsp;<b>string</b></td><td class='documentation'> Name of the Treatment</td></tr><tr><td></td><td class='content-td'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.id[1,1]:&nbsp;<b>int</b></td><td class='documentation'> ID of the Treatment</td></tr><tr><td></td><td class='content-td'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.minduration[1,1]:&nbsp;<b>int</b></td><td class='documentation'> Minimum Duration</td></tr><tr><td></td><td class='content-td'>}</td><td></td></tr></table><table class='type-definition'><tr><th class='resource-label-type resource-label'>type</th><th id='GetTreatmentsRequest' colspan='2' class='content-td'>GetTreatmentsRequest</th></tr><tr><td>&nbsp;</td></tr><tr><td></td><td colspan='2' class='documentation'> Requests all Treatments </td></tr><tr><td>&nbsp;</td></tr><tr><td></td><td class='content-td'><b>type</b> GetTreatmentsRequest<b>:</b>&nbsp;<b>void</b></td><td></td></tr></table><table class='type-definition'><tr><th class='resource-label-type resource-label'>type</th><th id='GetTreatmentsResponse' colspan='2' class='content-td'>GetTreatmentsResponse</th></tr><tr><td>&nbsp;</td></tr><tr><td></td><td colspan='2' class='documentation'> Returns all Treatments </td></tr><tr><td>&nbsp;</td></tr><tr><td></td><td class='content-td'><b>type</b> GetTreatmentsResponse<b>:</b>&nbsp;<b>void</b>{</td><td></td></tr><tr><td></td><td class='content-td'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.treatments[0,*]:&nbsp;undefined</td><td class='documentation'></td></tr><tr><td></td><td class='content-td'>}</td><td></td></tr></table><table class='type-definition'><tr><th class='resource-label-type resource-label'>type</th><th id='CreateTreatmentResponse' colspan='2' class='content-td'>CreateTreatmentResponse</th></tr><tr><td>&nbsp;</td></tr><tr><td></td><td colspan='2' class='documentation'> Response for a newly created  Treatment </td></tr><tr><td>&nbsp;</td></tr><tr><td></td><td class='content-td'><b>type</b> CreateTreatmentResponse<b>:</b>&nbsp;<b>void</b>{</td><td></td></tr><tr><td></td><td class='content-td'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.msg[0,*]:&nbsp;undefined</td><td class='documentation'></td></tr><tr><td></td><td class='content-td'>}</td><td></td></tr></table></body></html>

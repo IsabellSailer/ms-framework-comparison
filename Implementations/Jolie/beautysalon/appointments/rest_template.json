@@ -1,0 +1,6 @@
+{
+    "createAppointment":"method=post, template=/appointments/",
+    "getAppointment":"method=get, template=/appointments/appointment/{appointmentId}",
+    "getAppointments":"method=get, template=/appointments/list"
+}
+

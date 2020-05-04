@@ -1,0 +1,40 @@
+version: "3.7"
+services:
+  treatments-db:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: docker 
+    ports:
+      - "27017:27017"
+  appointments-db:
+    image: postgres:12-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: appointments
+  treatments:
+    build: ./treatments
+    image: beautysalon-jolie/treatments:1.0 
+    ports:
+      - "8080:8080"
+    restart: on-failure
+    depends_on:
+      - treatments-db
+  appointments:
+    build: ./appointments
+    image: beautysalon-jolie/appointments:1.0 
+    ports:
+      - "8081:8081"
+    restart: on-failure
+    depends_on:
+      - treatments
+      - confirmation
+      - appointments-db
+  confirmation:
+    build: ./confirmation
+    image: beautysalon-jolie/confirmation:1.0 
+    ports:
+      - "8082:8082"

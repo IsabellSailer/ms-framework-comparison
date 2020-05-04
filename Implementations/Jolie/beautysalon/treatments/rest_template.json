@@ -1,0 +1,6 @@
+{
+    "createTreatment":"method=post, template=/treatments/",
+    "getTreatment":"method=get, template=/treatments/treatment/{treatmentId}",
+    "getTreatments":"method=get, template=/treatments/list"
+}
+
