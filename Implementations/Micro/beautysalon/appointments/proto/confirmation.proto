@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+message Appointment {
+    string Id= 1;
+	string CustomerName = 2;
+	string Date = 3;
+    int32 StartTime = 4;
+    int32 EndTime = 5;
+	int32 Duration = 6;
+	string TreatmentId = 7;
+	string TreatmentName = 8;
+}

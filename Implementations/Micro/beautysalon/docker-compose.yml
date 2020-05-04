@@ -1,0 +1,47 @@
+version: "3.7"
+services:
+
+  treatments-db:
+    image: redis:5
+    ports: 
+      - "6379:6379"
+  appointments-db:
+    image: postgres:12-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: appointments
+  treatments:
+    build: ./treatments
+    image: beautysalon-micro/treatments:1.0 
+    ports:
+      - "8080:8080"
+    restart: on-failure
+    depends_on:
+      - treatments-db
+  appointments:
+    build: ./appointments
+    image: beautysalon-micro/appointments:1.0 
+    ports:
+      - "8081:8081"
+    restart: on-failure
+    depends_on:
+      - appointments-db
+  confirmation:
+    build: ./confirmation
+    image: beautysalon-micro/confirmation:1.0 
+    ports:
+      - "8082:8082"
+  prometheus:
+    image: prom/prometheus:v2.13.1
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command: --config.file=/etc/prometheus/prometheus.yml
+    restart: on-failure
+    depends_on:
+      - confirmation
+    
