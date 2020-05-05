@@ -1,1 +1,1 @@
-nameko run --config config.yml confirmation.service
+nameko run --config config-docker.yml confirmation.service

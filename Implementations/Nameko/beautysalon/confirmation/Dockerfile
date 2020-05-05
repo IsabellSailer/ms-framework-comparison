@@ -1,6 +1,7 @@
 FROM python:3.6.10
 
 ENV NAMEKO_VERSION=3.0.0-rc8
+ENV PYTHONUNBUFFERED=0
 
 COPY . /confirmation
 

@@ -5,6 +5,8 @@ DB_URIS:
 
 WEB_SERVER_ADDRESS: 0.0.0.0:8081
 
+TREATMENTS_SERVICE: localhost:8080
+
 STATSD:
   prod:
     enabled: true

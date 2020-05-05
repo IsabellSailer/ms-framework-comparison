@@ -4,6 +4,7 @@ import requests
 from ast import literal_eval
 from sqlalchemy import exc
 
+from nameko import config
 from nameko.web.handlers import http
 from nameko_sqlalchemy import Database
 from nameko.events import EventDispatcher
@@ -106,7 +107,7 @@ class AppointmentsService:
             return 409, "Appointments are only available from 8 - 18. Please choose another timeslot.\n"
 
         try:
-            URL = "http://treatments:8080/treatments/" + str(appointment_detail['treatment_id'])
+            URL = "http://" + config.get('TREATMENTS_SERVICE') + "/treatments/" + str(appointment_detail['treatment_id'])
             t_response = requests.get(url=URL)
             t_response.encoding = 'utf-8'
             treatment_data = literal_eval(t_response.text)
