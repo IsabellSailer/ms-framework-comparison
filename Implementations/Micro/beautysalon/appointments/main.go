@@ -59,7 +59,6 @@ type Database struct {
 // Creates a connection to a PostgreSQL Database
 // @return: Postgres Database Connection
 func postgresConn() *pg.DB {
-	//home := os.Getenv("HOME")
 	config.LoadFile("./config.json")
 
 	var database Database
