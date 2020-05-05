@@ -9,4 +9,4 @@ ENV ARTIFACT_NAME=confirmation-all.jar
 WORKDIR /usr/confirmation/
 COPY --from=builder /home/gradle/build/libs/$ARTIFACT_NAME .
 EXPOSE 8080
-CMD exec java -Dmicronaut.environments=docker -jar $ARTIFACT_NAME
+ENTRYPOINT exec java -Dmicronaut.environments=docker -jar $ARTIFACT_NAME

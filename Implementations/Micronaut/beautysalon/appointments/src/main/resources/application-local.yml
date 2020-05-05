@@ -15,7 +15,7 @@ micronaut:
   caches:
     discovery-client:
       enabled: false
-        
+
 endpoints:
   health:
     enabled: true

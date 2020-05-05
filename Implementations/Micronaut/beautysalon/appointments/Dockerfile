@@ -9,4 +9,4 @@ ENV ARTIFACT_NAME=appointments-all.jar
 WORKDIR /usr/appointments/
 COPY --from=builder /home/gradle/build/libs/$ARTIFACT_NAME .
 EXPOSE 8080
-CMD exec java -Dmicronaut.environments=docker -jar $ARTIFACT_NAME
+ENTRYPOINT exec java -Dmicronaut.environments=docker -jar $ARTIFACT_NAME
