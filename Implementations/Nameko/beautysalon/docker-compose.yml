@@ -16,7 +16,7 @@ services:
   treatments-db:
     image: redis:5
   appointments-db:
-    image: postgres:10.5-alpine
+    image: postgres:12-alpine
     ports:
       - "5432:5432"
     environment:

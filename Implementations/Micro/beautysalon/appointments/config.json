@@ -1,7 +1,7 @@
 {
     "databases": {
         "postgres": {
-            "address": "192.168.99.100:5432",
+            "address": "localhost:5432",
             "user": "postgres",
             "password": "docker",
             "databasename": "appointments"

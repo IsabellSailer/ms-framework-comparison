@@ -1,0 +1,7 @@
+{
+    "databases": {
+        "redis": {
+            "address": "treatments-db:6379"
+        }
+    }
+}

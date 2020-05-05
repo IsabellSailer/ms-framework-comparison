@@ -13,6 +13,7 @@ FROM alpine
 
 WORKDIR /usr/treatments
 COPY --from=builder /treatments/main /usr/treatments
+COPY config-docker.json /usr/treatments/config.json
 
 EXPOSE 8080
 CMD ["/usr/treatments/main"]

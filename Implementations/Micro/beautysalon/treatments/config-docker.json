@@ -1,0 +1,7 @@
+{
+    "databases": {
+        "redis": {
+            "address": "localhost:6379"
+        }
+    }
+}

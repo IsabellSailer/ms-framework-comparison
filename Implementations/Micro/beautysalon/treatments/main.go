@@ -12,6 +12,7 @@ import (
 	"github.com/gomodule/redigo/redis"
 	rejson "github.com/nitishm/go-rejson"
 
+	"github.com/micro/go-micro/config"
 	"github.com/micro/go-micro/web"
 )
 
@@ -27,10 +28,18 @@ type RedisConnection struct {
 	db redis.Conn
 }
 
+type Database struct {
+	Addr string `json:"address"`
+}
+
 // Creates a connection to a Redis Database
 // @return: Redis Database Connection
 func redisConn() redis.Conn {
-	var addr = flag.String("Server", "treatments-db:6379", "Redis server address")
+	config.LoadFile("./config.json")
+
+	var database Database
+	config.Get("databases", "redis").Scan(&database)
+	var addr = flag.String("Server", database.Addr, "Redis server address")
 
 	rh := rejson.NewReJSONHandler()
 	flag.Parse()
