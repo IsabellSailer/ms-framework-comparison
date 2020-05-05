@@ -3,6 +3,7 @@ FROM jolielang/jolie:1.9.0
 WORKDIR /usr/appointments
 
 COPY jester_config.iol rest_template.json appointment.ol APPOINTMENTS.json /usr/appointments/
+COPY config-docker.json /usr/appointments/config.json
 COPY lib /usr/appointments/lib/
 COPY public /usr/appointments/public
 

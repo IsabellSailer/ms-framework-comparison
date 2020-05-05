@@ -1,5 +1,6 @@
 include "console.iol"
 include "string_utils.iol"
+include "file.iol"
 
 
 include "./public/interfaces/TreatmentInterface.iol"
@@ -21,10 +22,15 @@ inputPort GETTREATMENT {
 
 
 init {
+readFile@File( {
+    filename = "config.json"
+    format = "json"
+})(config)
+
 scope (InsertMongoDB){
   install (default => valueToPrettyString@StringUtils(InsertMongoDB)(s);
            println@Console(s)());
-           connectValue.host = "treatments-db";
+           connectValue.host = config.database.redis.host;
            connectValue.dbname ="admin";
            connectValue.username = "admin";
            connectValue.password = "docker";

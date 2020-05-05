@@ -1,6 +1,7 @@
 include "console.iol"
 include "string_utils.iol"
 include "database.iol"
+include "file.iol"
 
 include "./public/interfaces/AppointmentInterface.iol"
 include "./public/interfaces/TreatmentInterface.iol"
@@ -28,11 +29,18 @@ outputPort CONFIRMATION {
 
 
 init {
+    readFile@File( {
+        filename = "config.json"
+        format = "json"
+    })(config)
+
+    GETTREATMENT.location = "socket://" + config.services.treatments.host + ":8090"
+    CONFIRMATION.location = "socket://" + config.services.confirmation.host + ":8082"
 
     with ( connectionInfo ) {
         .username = "postgres";
         .password = "docker";
-        .host = "appointments-db";
+        .host = config.database.postgres.host;
         .database = "appointments";
         .driver = "postgresql"
     };

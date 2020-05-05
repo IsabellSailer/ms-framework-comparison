@@ -1,0 +1,15 @@
+{
+    "database": {
+        "postgres": {
+            "host": "localhost"
+        }
+    },
+    "services": {
+        "treatments": {
+            "host": "localhost"
+        },
+        "confirmation": {
+            "host": "localhost"
+        }
+    }
+}

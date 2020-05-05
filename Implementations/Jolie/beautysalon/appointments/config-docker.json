@@ -1,0 +1,15 @@
+{
+    "database": {
+        "postgres": {
+            "host": "appointments-db"
+        }
+    },
+    "services": {
+        "treatments": {
+            "host": "treatments"
+        },
+        "confirmation": {
+            "host": "confirmation"
+        }
+    }
+}
