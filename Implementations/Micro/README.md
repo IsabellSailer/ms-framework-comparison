@@ -1,14 +1,78 @@
-# Beauty Salon
+# Beauty Salon - Micro
 
-## Environment
+The services can be run either completely in Docker or with the services locally and only the supporting services in Docker:
+
+* [Docker only](#Docker-only)
+* [Services locally](#Services-locally)
+
+To test the services with sample requests, you can use the scripts at [scripts](https://github.com/IsabellSailer/ms-framework-comparison/tree/master/Implementations/scripts). Further information can be found here:
+
+* [How to use the Application](#How-to-use-the-application)
+
+## Docker only
+
+### docker-compose
+
+The easiest way to run the system is via `docker-compose`:
+
+```bash
+user:~/beautysalon$ docker-compose up
+```
+
+This will build the images and start the containers. Please note that it might take a little while until all services are up and running and database connections are established.
+
+### Containers individually
+
+Additionally, you can also build and run the containers individually. First, you have to start the supporting services:
+
+```bash
+$ docker run -d --name treatments-db -p 6379:6379 redis:5
+$ docker run --name appointments-db -d -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=docker -e POSTGRES_DB=appointments postgres:12-alpine
+```
+
+Second, you can build and run the services:
+
+#### Treatments service
+
+```bash
+user:~/beautysalon/treatments$ docker build -t beautysalon-micro/treatments:1.0 .
+user:~/beautysalon/treatments$ docker run --name treatments --link treatments-db -p 8080:8080 beautysalon-micro/treatments:1.0
+```
+
+#### Appointments service
+
+```bash
+user:~/beautysalon/appointments$ docker build -t beautysalon-micro/appointments:1.0 .
+user:~/beautysalon/appointments$ docker run --name appointments --link appointments-db --link treatments beautysalon-micro/appointments:1.0
+```
+
+#### Confirmation service
+
+```bash
+user:~/beautysalon/confirmation$ docker build -t beautysalon-micro/confirmation:1.0 .
+user:~/beautysalon/confirmation$ docker run --name confirmation beautysalon-micro/confirmation:1.0
+```
+
+Third, you have to start prometheus, because it has to have access to the confirmation service:
+
+```bash
+$ docker run -d --name prometheus -p 9090:9090 --link confirmation -v ./prometheus-docker.yml:/etc/prometheus/prometheus.yml --restart on-failure prom/prometheus:v2.13.1 --config.file=/etc/prometheus/prometheus.yml
+```
+
+## Services locally
+
+To run the services locally, you can use the following instructions to set up your local development environment:
+
+### Environment
+
 The Application was developed on Ubuntu 18.04, so this guide provides commands for Debian based OS. 
 Any other Unix-like OS would work as well (commands may be different).
 
+### Requirements
 
-## Requirements
 Make sure you are logged in as an user with sudo privileges for installation. 
 
-### Go 1.13
+#### Go 1.13
 
 ```bash
 $ sudo add-apt-repository ppa:longsleep/golang-backports
@@ -17,87 +81,50 @@ $ sudo apt-get install golang-go
 ```
 
 #### Setting $GOPATH
-Edit your ~/.bash_profile file and append at the end :
+
+Edit your ~/.bash_profile file and append at the end:
+
 ```bash
 export GOPATH=$HOME/go
 ```
+
 for sourcing the .bash_profile automatically you have to edit the ~/.bashrc file and append at the end:
+
 ```bash
 source ~/.bash_profile
 ```
 
-### Go-Micro 1.11.1
-First make sure that $GOROOT is not set, otherwise unset the variable.
+#### Micro Runtime
 
-```bash
-user:~$ echo $GOROOT
-/usr/local/go
-user:~$ unset GOROOT
-user:~$ echo $GOROOT
-user:~$ 
-```
-
-To make sure it is unset permanently, add to your ~/.bash_profile file the line:
-```bash
-unset GOROOT
-```
-
-For installing packages you have to be at $GOPATH. 
-
-```bash
-user:~$ cd /go
-user:~/go$ go get github.com/micro/go-micro
-```
-
-If you receive an error output like:
-```bash
-../../github.com/coreos/etcd/clientv3/auth.go:121:72: cannot use auth.callOpts (type []"github.com/coreos/etcd/vendor/google.golang.org/grpc".CallOption) as type []"go.etcd.io/etcd/vendor/google.golang.org/grpc".CallOption in argument to auth.remote.AuthEnable
-```
-
-you have to customize the files watcher.go and etcd.go in ~/go/src/github.com/micro/go-micro/registry/etcd .
-Therefore replace the import from "github.com/coreos/etcd/clientv3" to "go.etcd.io/etcd/clientv3" and the error should be fixed.
-
-### Micro Runtime
 ```bash
 user:~/go$ go get github.com/micro/micro
 ```
 
-### Go Modules
+#### Go modules and Go-Micro modules
+
+The go modules are already referenced, but you can make sure all modules are available for each service by running:
+
 ```bash
-
-user:~/go$ go get github.com/gomodule/redigo/redis
-user:~/go$ go get github.com/nitishm/go-rejson
-user:~/go$ cd $GOPATH/src/github.com/nitishm/go-rejson
-user:~/go/src/github.com/nitishm/go-rejson$ ./install-redis-rejson.sh
-user:~/go$ go get github.com/go-pg/pg
-user:~/go$ sudo apt-get install libglib2.0-dev libgtksourceview2.0-dev libgtk-3-dev
-user:~/go$ go get github.com/gotk3/gotk3/gtk
-
-```
-
-### Micro Modules
-```bash
-user:~/go$ go get github.com/micro/go-plugins
-user:~/go$ go get github.com/micro/go-micro/web
-user:~/go$ go get github.com/micro/go-micro/config
-user:~/go$ go get github.com/micro/go-plugins/wrapper/breaker/gobreaker
-user:~/go$ go get github.com/micro/go-plugins/wrapper/monitoring/prometheus
+user:~/beautysalon/treatments$ go mod install
+user:~/beautysalon/appointments$ go mod install
+user:~/beautysalon/confirmation$ go mod install
 ```
 
 For using messaging with micro you need protobuf code generation for micro, therefore you first have to install Protobuf and protoc generation for micro.
 
-### Protobuf
+#### Protobuf
+
 ```bash
 $ sudo apt install linuxbrew-wrapper
 $ brew install protobuf
 ```
 
-### Proto & Protoc-Gen-Go
+#### Proto & Protoc-Gen-Go
 ```bash
 user:~/go$ go get -u github.com/golang/protobuf/{proto,protoc-gen-go}
 ```
 
-### Protoc-Gen-Micro
+#### Protoc-Gen-Micro
 ```bash
 user:~/go$ go get -u github.com/micro/protoc-gen-micro
 ```
@@ -115,22 +142,27 @@ go.etcd.io/etcd/vendor/golang.org/x/net/trace.init.0()
 Go to ~/go/src/go.etcd.io/etcd/vendor/golang.org/x/net and delete the folder trace. Also go to ~/go/src/github.com/coreos/etcd/vendor/golang.org/x/net and delete the trace folder as well.
 
 ### Directory of the Beautysalon
-For the application to work properly, you have to store the code of the beautysalon under ~/go/src
 
-### Docker
+#### Docker
+
 ```bash
 $ sudo apt-get install docker-ce docker-ce-cli containerd.io
 ```
+
 #### PostgreSQL 12
+
 ```bash
-$ sudo docker pull postgres:12
+$ sudo docker pull postgres:12-alpine
 ```
+
 #### Redis 5
+
 ```bash
 $ sudo docker pull redis:5
 ```
 
-### Prometheus
+#### Prometheus
+
 Download the latest release from prometheus.io, here Version 2.13.1 was used. Then extract it, e.g. with:
 ```bash
 user:~/downloads$ tar xvfz prometheus-*.tar.gz
@@ -147,21 +179,25 @@ scrape_configs:
     scrape_interval: 10s
 
     static_configs:
-      - targets: ['localhost:8081']
+      - targets: ['localhost:8082']
 ```
 
-## Running the Application
+### Running the Application
 
-### Starting the Container
+### Starting the supporting services
+
 Before running the application, you have to start PostgreSQL and Redis.
+
 ```bash
-$ sudo docker run --name appointments -e POSTGRES_PASSWORD=docker -e POSTGRES_DB=appointments -p 5432:5432 -d postgres:12
+$ sudo docker run -d -e POSTGRES_PASSWORD=docker -e POSTGRES_DB=appointments -p 5432:5432 postgres:12-alpine
 ```
+
 ```bash
-$ sudo docker run --name treatmentsdb -d -p 6379:6379 redis:5
+$ sudo docker run  -d -p 6379:6379 redis:5
 ```
 
 ### Starting Prometheus
+
 Additionally you have to start Prometheus.
 ```bash
 user:~/prometheus-2.13.1.linux-amd64$ ./prometheus --config.file=prometheus.yml
@@ -170,19 +206,23 @@ user:~/prometheus-2.13.1.linux-amd64$ ./prometheus --config.file=prometheus.yml
 Now you can access Prometheus UI via http://localhost:9090 .
 
 ### Starting the Microservices
+
 Go to the root folder of the wanted microservice and start it.
 ```bash
-user:~/go/src/beautysalon/treatments$ go run main.go
+user:~/beautysalon/treatments$ go run main.go
 ```
+
 ```bash
-user:~/go/src/beautysalon/appointments$ go run main.go
+user:~/beautysalon/appointments$ go run main.go
 ```
+
 For sending the metrics to Prometheus, you have to specify the port for the confirmation microservice.
 ```bash
-user:~/go/src/beautysalon/confirmation$ go run main.go --server_address 127.0.0.1:8081
+user:~/beautysalon/confirmation$ go run main.go --server_address 127.0.0.1:8082
 ```
 
 ### Inital Creation of Treatments and Appointments
+
 For the initial creation of available treatments and booked appointments, go to the /scripts folder.
 For avoiding problems, it is recommended to execute these scripts before starting the confirmation service.
 Executing the micro_save_treatments.sh script will create 5 different treatments and is called by:
@@ -196,11 +236,12 @@ The same applies for the micro_save_appointments.sh script, which creates 5 appo
 user:~/scripts ./micro_save_appointments.sh <port-number>
 ``` 
 
-### How to use the Application - Example
+### How to use the Application
 
 After starting the microservices, you can communicate with the treatments and the appointments services.
 
 #### Use Case Example
+
 In our example use case a customer wants to book an appointment for a specific treatment. 
 As for creating an appointment the ID of the desired treatment is needed, you have to get the IDs of the offered treatments first.
 To view the list of all available treatments and their IDs open a new terminal and enter the command:

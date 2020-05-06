@@ -26,6 +26,7 @@ func main() {
 	service := micro.NewService(
 		micro.Name("beautysalon.confirmation"),
 		micro.WrapHandler(prometheus.NewHandlerWrapper()),
+		micro.Address(":8082"),
 	)
 
 	service.Init()
