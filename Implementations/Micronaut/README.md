@@ -5,7 +5,7 @@ The services can be run either completely in Docker or with the services locally
 * [Docker only](#Docker-only)
 * [Services locally](#Services-locally)
 
-To test the services with sample requests, you can use the scripts at [scripts](https://github.com). Further information can be found here:
+To test the services with sample requests, you can use the scripts at [scripts](https://github.com/IsabellSailer/ms-framework-comparison/tree/master/Implementations/scripts). Further information can be found here:
 
 * [How to get the API](#How-to-get-the-API)
 
