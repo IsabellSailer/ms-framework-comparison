@@ -310,13 +310,13 @@ In our example use case a customer wants to book an appointment for a specific t
 As for creating an appointment the ID of the desired treatment is needed, you have to get the IDs of the offered treatments first.
 To view the list of all available treatments and their IDs open a new terminal and enter the command:
 ```bash
-$ curl 'http://localhost:8000/treatments/list' 
+$ curl 'http://localhost:8080/treatments/list' 
 ```
 It will return a list with all available treatments including all important information: ID, Name, Price, Minduration and Maxduration.
 
 For creating an appointment you have to send a POST request to the appointments service, containing the required fields for an appointment, including the ID of the desired treatment.
 ```bash
-$ curl -X "POST" "http://localhost:8001/appointments/" 
+$ curl -X "POST" "http://localhost:8081/appointments/" 
        -H 'Content-Type: application/json; charset=utf-8' -d $'{
 	  "treatment_id": <id>, 
 	  "customer_name": "<name>", 
@@ -337,12 +337,12 @@ Apart from the above use case, also some additional functions are offered.
 
 If you want to get the information only for one specific treatment, you have to send a GET request with the ID of the desired treatment to the treatment service.
 ```bash
-$ curl 'http://localhost:8000/treatments/<id>' 
+$ curl 'http://localhost:8080/treatments/<id>' 
 ```
 
 If you want to create a new treatment you have to send a POST request to the treatment service, including all required fields.
 ```bash
-$ curl -X "POST" "http://localhost:8000/treatments/" \
+$ curl -X "POST" "http://localhost:8080/treatments/" \
        -H 'Content-Type: application/json; charset=utf-8' -d $'{
     	  "id": <id>, 
     	  "name": "<name>", 
@@ -356,10 +356,10 @@ $ curl -X "POST" "http://localhost:8000/treatments/" \
 
 If you want to view all booked appointments including their information you have to send a GET request to the appointment service.
 ```bash
-$ curl 'http://localhost:8001/appointments/list' 
+$ curl 'http://localhost:8081/appointments/list' 
 ```
 
 If you only want to view the details of a specific appointment, you have to send a GET request to the appointment service, including the ID of your appointment.
 ```bash
-$ curl 'http://localhost:8001/appointments/<id>' 
+$ curl 'http://localhost:8081/appointments/<id>' 
 ```
