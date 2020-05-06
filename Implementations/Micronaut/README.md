@@ -1,101 +1,188 @@
-# Beauty Salon
+# Beauty Salon - Micronaut
 
-## Environment
-The Application was developed on Ubuntu 18.04, so this guide provides commands for Debian based OS. 
+The services can be run either completely in Docker or with the services locally and only the supporting services in Docker:
+
+* [Docker only](#Docker-only)
+* [Services locally](#Services-locally)
+
+To test the services with sample requests, you can use the scripts at [scripts](https://github.com). Further information can be found here:
+
+* [How to get the API](#How-to-get-the-API)
+
+## Docker only
+
+### docker-compose
+
+The easiest way to run the system is via `docker-compose`:
+
+```bash
+user:~/beautysalon$ docker-compose up
+```
+
+This will build the images and start the containers. Please note that it might take a little while until all services are up and running and database connections are established.
+
+### Containers individually
+
+Additionally, you can also build and run the containers individually. First, you have to start the supporting services:
+
+```bash
+$ docker run -d --name consul -p 8500:8500 consul:1.2.4
+$ docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.7.11-management
+$ docker run -d --name zipkin -p 9411:9411 openzipkin/zipkin:2.17.0
+$ docker run -d --name treatments-db -p 6379:6379 redis:5
+$ docker run --name appointments-db -d -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=docker -e POSTGRES_DB=appointments postgres:12-alpine
+```
+
+Second, you can build and run the services:
+
+#### Treatments service
+
+```bash
+user:~/beautysalon/treatments$ docker build -t beautysalon-micronaut/treatments:1.0 .
+user:~/beautysalon/treatments$ docker run --name treatments --link consul --link zipkin --link treatments-db -p 8080:8080 beautysalon-micronaut/treatments:1.0
+```
+
+#### Appointments service
+
+```bash
+user:~/beautysalon/appointments$ docker build -t beautysalon-micronaut/appointments:1.0 .
+user:~/beautysalon/appointments$ docker run --name appointments --link consul --link zipkin --link appointments-db --link treatments --link rabbitmq beautysalon-micronaut/appointments:1.0
+```
+
+#### Confirmation service
+
+```bash
+user:~/beautysalon/confirmation$ docker build -t beautysalon-micronaut/confirmation:1.0 .
+user:~/beautysalon/confirmation$ docker run --name confirmation --link consul --link zipkin --link rabbitmq beautysalon-micronaut/confirmation:1.0
+```
+
+## Services locally
+
+To run the services locally, you can use the following instructions to set up your local development environment:
+
+### Environment
+
+The Application was developed on Ubuntu 18.04, so this guide provides commands for Debian based OS.
 Any other Unix-like OS would work as well (commands may be different).
 
+### Requirements
 
-## Requirements
-Make sure you are logged in as an user with sudo privileges for installation. 
+Make sure you are logged in as a user with sudo privileges for installation.
 
-### JDK Version 11
+#### JDK Version 11
+
 ```bash
 $ sudo apt install openjdk-11-jdk
 ```
 
-### SDKMAN
+#### SDKMAN
+
 ```bash
 $ curl -s "https://get.sdkman.io" | bash
 $ source "$HOME/.sdkman/bin/sdkman-init.sh"
 ```
+
 #### Micronaut 1.2.1
 
 ```bash
 $ sdk install micronaut 1.2.1
 ```
+
 #### Gradle 5.6.2
+
 ```bash
 $ sdk install gradle 5.6.2
 ```
-### Docker
+
+#### Docker
+
 ```bash
 $ sudo apt-get install docker-ce docker-ce-cli containerd.io
 ```
+
 #### Consul 1.2.4
+
 ```bash
 $ sudo docker pull consul:1.2.4
 ```
+
 #### RabbitMQ 3.7.11 Management
+
 ```bash
 $ sudo docker pull rabbitmq:3.7.11-management
 ```
-#### Postgres 10.5 Alpine
+
+#### Postgres 12 Alpine
+
 ```bash
-$ sudo docker pull postgres:10.5-alpine
+$ sudo docker pull postgres:12-alpine
 ```
+
 #### Redis 5
+
 ```bash
 $ sudo docker pull redis:5
 ```
+
 #### OpenZipkin/Zipkin 2.17.0
+
 ```bash
 $ sudo docker pull openzipkin/zipkin:2.17.0
 ```
 
-## Running the Application
-### Starting the Container
+### Running the Application
+
+#### Starting the supporting services
+
 Before running the application, you have to start Consul, RabbitMQ, PostgreSQL, Redis and Zipkin.
+
 ```bash
-$ sudo docker run -p 8500:8500 consul:1.2.4
+$ sudo docker run -d -p 8500:8500 consul:1.2.4
 ```
+
 ```bash
-$ sudo docker run --rm -it \
+$ sudo docker run -d --rm \
         -p 5672:5672 \
         -p 15672:15672 \
         rabbitmq:3.7.11-management
 ```
+
 ```bash
-$ docker run -it \
+$ docker run -d \
     -p 5432:5432 \
     -e POSTGRES_USER=postgres \
     -e POSTGRES_PASSWORD=docker \
     -e POSTGRES_DB=appointments \
-    postgres:10.5-alpine
+    postgres:12-alpine
 ```
+
 ```bash
-$ sudo docker run --name treatmentsdb -d redis:5
+$ sudo docker run -d -p 6379:6379 redis:5
 ```
+
 ```bash
 $ sudo docker run -d -p 9411:9411 openzipkin/zipkin:2.17.0
 ```
-Now you can access Consuls UI by calling http://localhost:8500 
-and Zipkins UI by calling http://localhost:9411 .
 
-### Starting the Microservices
-Go to the root folder of the project, there you can start a microservice with the command:
+Now you can access Consuls UI by calling http://localhost:8500 
+and Zipkins UI by calling http://localhost:9411.
+
+#### Starting the services
+
+The commands for running the three microservices of the Beauty Salon application are:
+
 ```bash
-user:~/beautysalon$ ./gradlew <microservice-name>::run
+user:~/beautysalon/treatments$ ./gradlew run -Dmicronaut.environments=local
 ```
-The command for running the 3 microservices of the Beauty Salon application are:
+
 ```bash
-user:~/beautysalon$ ./gradlew treatments::run
+user:~/beautysalon/appointments$ ./gradlew run -Dmicronaut.environments=local
 ```
+
 ```bash
-user:~/beautysalon$ ./gradlew appointments::run
+user:~/beautysalon/confirmation$ ./gradlew run -Dmicronaut.environments=local
 ```
-```bash
-user:~/beautysalon$ ./gradlew confirmation::run
-```
+
 ## How to get the API
 
 After starting a microservice its API is accessable under:
