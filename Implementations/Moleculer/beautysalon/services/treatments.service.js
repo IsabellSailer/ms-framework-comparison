@@ -3,7 +3,7 @@
 //const { ServiceBroker } = require("moleculer");
 const DbService = require("moleculer-db");
 const MongoDBAdapter = require("moleculer-db-adapter-mongo");
-const { MoleculerError } = require("moleculer").Errors;
+const { MoleculerClientError } = require("moleculer").Errors;
 
 /**
  * @typedef {import('moleculer').Context} Context Moleculer's Context
@@ -85,7 +85,9 @@ module.exports = {
 			},
 			async handler(ctx) {
 				let searchId = parseInt(ctx.params.id, 10);
-				console.log(searchId);
+				if (isNaN(searchId)) {
+					throw new MoleculerClientError("Not found", 404, "NOT_FOUND", { description: ctx.params.id + " is not valid id" });
+				}
 				let params = {
 					limit: 0,
 					offset: 0,
@@ -96,7 +98,7 @@ module.exports = {
 				if (result.length > 0) {
 					return result[0];
 				} else {
-					throw new MoleculerError("Not found", 404, "NOT_FOUND", { id: searchId });
+					throw new MoleculerClientError("Not found", 404, "NOT_FOUND", { id: searchId });
 				}
 			}
 		},
@@ -122,9 +124,8 @@ module.exports = {
                 await this.validateEntity(entity);
 
 				const doc = await this.adapter.insert(entity);
-				console.log(doc);
-                let json = await this.transformDocuments(ctx, doc);
-                return json;
+				this.logger.info("Created treatment", doc);
+                return doc;
             }
         }
 	},

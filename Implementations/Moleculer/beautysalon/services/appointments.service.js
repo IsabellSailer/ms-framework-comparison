@@ -4,7 +4,7 @@
 const DbService = require("moleculer-db");
 const SqlAdapter = require("moleculer-db-adapter-sequelize");
 const Sequelize = require("sequelize");
-const { MoleculerError } = require("moleculer").Errors;
+const { MoleculerClientError } = require("moleculer").Errors;
 
 /**
  * @typedef {import('moleculer').Context} Context Moleculer's Context
@@ -121,7 +121,52 @@ module.exports = {
 		// --- ADDITIONAL ACTIONS ---
 
 		/**
-		 * Increase the quantity of the product item.
+ 		 * Get all appointments 
+ 		 */
+		getAllAppointments: {
+			rest: "GET /",
+			async handler(ctx) {
+				let params = {
+					limit: 0,
+					offset: 0,
+					sort: ["id"],
+					query: {}
+				};
+				const allAppointments = await this.adapter.find(params).map(this.adapter.entityToObject);
+				return allAppointments;
+			}
+		},
+
+		/**
+		 * Gets an appointment by id
+		 */
+		getAppointmentById: {
+			rest: "GET /:id",
+			params: {
+				id: { type: "string" }
+			},
+			async handler(ctx) {
+				let searchId = parseInt(ctx.params.id, 10);
+				if (isNaN(searchId))  {
+					throw new MoleculerClientError("Not found", 404, "NOT_FOUND", { description: ctx.params.id + " is not valid id" });
+				}
+				let params = {
+					limit: 0,
+					offset: 0,
+					sort: ["id"],
+					query: {id: searchId}
+				};
+				const appointment = await this.adapter.find(params).map(this.adapter.entityToObject);;
+				if (appointment.length > 0) {
+					return appointment[0];
+				} else {
+					throw new MoleculerClientError("Not found", 404, "NOT_FOUND", { id: searchId });
+				}
+			}
+		},
+
+		/**
+		 * Create an appointment
 		 */
 		createAppointment: {
 			rest: "POST /",
@@ -130,15 +175,14 @@ module.exports = {
 				value: "number|integer|positive"
 			},*/
 			async handler(ctx) {
-				console.log("called create");
 				let entity = ctx.params;
 				await this.validateEntity(entity);
 
 				if (entity.endTime <= entity.startTime) {
-					throw new MoleculerError("Conflict", 409, "CONFLICT", { description: "Start time has to be before end time" });
+					throw new MoleculerClientError("Conflict", 409, "CONFLICT", { description: "Start time has to be before end time" });
 				}
 				if (entity.startTime < 8 || entity.endTime < 9 || entity.startTime > 18 || entity.endTime > 18) {
-					throw new MoleculerError("Conflict", 409, "CONFLICT", { description: "Appointments are only available from 8 - 18. Please choose another timeslot." });
+					throw new MoleculerClientError("Conflict", 409, "CONFLICT", { description: "Appointments are only available from 8 - 18. Please choose another timeslot." });
 				}
 
 				entity.duration = entity.endTime - entity.startTime;
@@ -149,15 +193,15 @@ module.exports = {
 					treatment = await ctx.call("treatments.findTreatmentById", {id: entity.treatmentId.toString()});
 					entity.treatmentName = treatment.name;
 				} catch (e) {
-				    throw new MoleculerError("Conflict", 409, "CONFLICT", { description: "No treatment found for id: " + entity.treatmentId });
+				    throw new MoleculerClientError("Conflict", 409, "CONFLICT", { description: "No treatment found for id: " + entity.treatmentId });
 				} 
 
 				if (entity.duration < treatment.minduration) {
-				    throw new MoleculerError("Conflict", 409, "CONFLICT", { description: "An appointment for " + treatment.name + " takes at least "
+				    throw new MoleculerClientError("Conflict", 409, "CONFLICT", { description: "An appointment for " + treatment.name + " takes at least "
 					+ treatment.minduration + " hour(s). Please choose another timeslot."});
 				}
 				if (entity.duration > treatment.maxduration) {
-					throw new MoleculerError("Conflict", 409, "CONFLICT", { description: "An appointment for " + treatment.name + " takes maximum "
+					throw new MoleculerClientError("Conflict", 409, "CONFLICT", { description: "An appointment for " + treatment.name + " takes maximum "
 					+ treatment.maxduration + " hour(s). Please choose another timeslot."});
 				}
 
@@ -165,71 +209,47 @@ module.exports = {
 					limit: 0,
 					offset: 0,
 					sort: ["id"],
-					populate: ["id", "startTime", "customerName"],
 					query: {}
 				};
 				let bookedAppointments = await this.adapter.find(params).map(this.adapter.entityToObject);
 
 				let conflicts = 0;
 				for (let booked of bookedAppointments) {
-					if (booked.treatmentId == entity.treatmentId && booked.date == entity.date) {
-						if (!(entity.startTime <= booked.startTime && entity.endTime <= booked.endTime) && !(booked.endTime <= entity.endTime && booked.endTime <= entity.startTime)) {
+					if (booked.treatmentId === entity.treatmentId && booked.date === entity.date) {
+						if (!(entity.startTime < booked.startTime && entity.endTime < booked.endTime) && !(booked.endTime < entity.endTime && booked.endTime <= entity.startTime)) {
 							conflicts++;
 						}
 					}
 				}
 
 				if (conflicts > 0) {
-					throw new MoleculerError("Conflict", 409, "CONFLICT", { description: "There were " + conflicts
+					throw new MoleculerClientError("Conflict", 409, "CONFLICT", { description: "There were " + conflicts
 					+ " conflicts with other appointments. Please choose a free timeslot."});
-				} else {
-
-					const doc = await this.adapter.insert(entity);
-					//console.log(doc);
-                	let json = this.adapter.entityToObject(doc);
-					return json;
 				}
+				let doc;
+				try {
+				   doc = await this.adapter.insert(entity);
+				} catch (e) {
+					throw new MoleculerClientError("Conflict", 409, "CONFLICT", { description: "Could not save appointment"});
+				}
+				let jsonAppointment = this.adapter.entityToObject(doc);
+				this.logger.info("Created appointment: ", jsonAppointment);
+
+				//TODO notify confirmation service
+				ctx.emit("appointment.created", jsonAppointment, ["confirmation"])
+
+
+				return jsonAppointment;
 			}
 		},
-
-		/**
-		 * Decrease the quantity of the product item.
-		
-		decreaseQuantity: {
-			rest: "PUT /:id/quantity/decrease",
-			params: {
-				id: "string",
-				value: "number|integer|positive"
-			},
-			 @param {Context} ctx 
-			async handler(ctx) {
-				const doc = await this.adapter.updateById(ctx.params.id, { $inc: { quantity: -ctx.params.value } });
-				const json = await this.transformDocuments(ctx, ctx.params, doc);
-				await this.entityChanged("updated", json, ctx);
-
-				return json;
-			}
-		}
-		*/
+	
 	},
 
 	/**
 	 * Methods
 	 */
 	methods: {
-		/**
-		 * Loading sample data to the collection.
-		 * It is called in the DB.mixin after the database
-		 * connection establishing & the collection is empty.
-		 
-		async seedDB() {
-			await this.adapter.insertMany([
-				{ name: "Samsung Galaxy S10 Plus", quantity: 10, price: 704 },
-				{ name: "iPhone 11 Pro", quantity: 25, price: 999 },
-				{ name: "Huawei P30 Pro", quantity: 15, price: 679 },
-			]);
-		}
-		*/
+
 	},
 
 	/**
