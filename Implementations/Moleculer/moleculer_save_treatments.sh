@@ -11,7 +11,7 @@ MINDUR=$3
 MAXDUR=$4
 ID=$5
 
-curl -X "POST" "http://localhost:${PORT}/api/treatments" \
+curl -X "POST" "http://192.168.99.100:${PORT}/treatments" \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d $'{
   "id": '${ID}',

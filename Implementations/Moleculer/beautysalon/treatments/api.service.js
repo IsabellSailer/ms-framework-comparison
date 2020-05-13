@@ -15,7 +15,7 @@ module.exports = {
 	// More info about settings: https://moleculer.services/docs/0.14/moleculer-web.html
 	settings: {
 		// Exposed port
-		port: process.env.PORT || 3000,
+		port: process.env.PORT || 8080,
 
 		// Exposed IP
 		ip: "0.0.0.0",
@@ -25,10 +25,10 @@ module.exports = {
 
 		routes: [
 			{
-				path: "/api",
+				path: "/",
 
 				whitelist: [
-					"**"
+					"treatments.*"
 				],
 
 				// Route-level Express middlewares. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Middlewares
@@ -45,10 +45,12 @@ module.exports = {
 
 				// The auto-alias feature allows you to declare your route alias directly in your services.
 				// The gateway will dynamically build the full routes from service schema.
-				autoAliases: true,
+				autoAliases: false,
 
 				aliases: {
-
+					"GET treatments": "treatments.getAllTreatments",
+					"GET treatments/:id": "treatments.findTreatmentById",
+					"POST treatments": "treatments.createTreatment"
 				},
 
 				/** 
@@ -91,7 +93,7 @@ module.exports = {
 				},
 
 				// Mapping policy setting. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Mapping-policy
-				mappingPolicy: "all", // Available values: "all", "restrict"
+				mappingPolicy: "restrict", // Available values: "all", "restrict"
 
 				// Enable/disable logging
 				logging: true

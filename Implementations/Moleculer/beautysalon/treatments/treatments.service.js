@@ -1,9 +1,24 @@
 "use strict";
 
-//const { ServiceBroker } = require("moleculer");
 const DbService = require("moleculer-db");
 const MongoDBAdapter = require("moleculer-db-adapter-mongo");
 const { MoleculerClientError } = require("moleculer").Errors;
+
+// set mongo db options in case authentication is required
+const mongoOptions = function() {
+	if (process.env.MONGO_USER) {
+		return {
+			authSource: "admin",
+			auth: {
+				user: process.env.MONGO_USER,
+				password: process.env.MONGO_PASSWORD
+			}
+		};
+	} else {
+		return {};
+	}
+}();
+
 
 /**
  * @typedef {import('moleculer').Context} Context Moleculer's Context
@@ -34,7 +49,7 @@ module.exports = {
     dependencies: [],
     
 	mixins: [DbService],
-	adapter: new MongoDBAdapter("mongodb://localhost:27017/beautysalon"),
+	adapter: new MongoDBAdapter(process.env.MONGO_URI || "mongodb://localhost:27017/beautysalon", mongoOptions),
 	collection: "treatments",
 
 	/**

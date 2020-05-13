@@ -1,78 +1,48 @@
-version: "3.3"
+version: "3.7"
 
 services:
 
-  api:
-    build:
-      context: .
-    image: beautysalon
-    env_file: docker-compose.env
-    environment:
-      SERVICES: api
-      PORT: 3000
-    depends_on:
-      - rabbitmq
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.api-gw.rule=PathPrefix(`/`)"
-      - "traefik.http.services.api-gw.loadbalancer.server.port=3000"
-    networks:
-      - internal
-
-  greeter:
-    build:
-      context: .
-    image: beautysalon
-    env_file: docker-compose.env
-    environment:
-      SERVICES: greeter
-    depends_on:
-      - rabbitmq
-    networks:
-      - internal
-
-  products:
-    build:
-      context: .
-    image: beautysalon
-    env_file: docker-compose.env
-    environment:
-      SERVICES: products
-    depends_on:
-      - mongo
-      - rabbitmq
-    networks:
-      - internal
-
-  mongo:
-    image: mongo:4
-    volumes:
-      - data:/data/db
-    networks:
-      - internal
-
   rabbitmq:
     image: rabbitmq:3
-    networks:
-      - internal
-
-  traefik:
-    image: traefik:v2.1
-    command:
-      - "--api.insecure=true" # Don't do that in production!
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
     ports:
-      - 3000:80
-      - 3001:8080
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    networks:
-      - internal
-      - default
-
-networks:
-  internal:
-
-volumes:
-  data:
+      - "5672:5672"
+      - "15672:15672"
+  treatments-db:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: docker 
+    ports:
+      - "27017:27017"
+  appointments-db:
+    image: postgres:12-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: appointments
+  treatments:
+    build: ./treatments
+    image: beautysalon-moleculer/treatments:1.0 
+    ports:
+      - "8080:8080"
+    restart: on-failure
+    depends_on:
+      - treatments-db
+      - rabbitmq
+  appointments:
+    build: ./appointments
+    image: beautysalon-moleculer/appointments:1.0 
+    ports:
+      - "8081:8081"
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+      - appointments-db
+  confirmation:
+    build: ./confirmation
+    image: beautysalon-moleculer/confirmation:1.0 
+    restart: on-failure
+    depends_on: 
+      - rabbitmq

@@ -1,6 +1,5 @@
 "use strict";
 
-//const DbMixin = require("../mixins/db.mixin");
 const DbService = require("moleculer-db");
 const SqlAdapter = require("moleculer-db-adapter-sequelize");
 const Sequelize = require("sequelize");
@@ -18,8 +17,8 @@ module.exports = {
 	 * Mixins
 	 */
 	mixins: [DbService],
-	adapter: new SqlAdapter('appointments', 'postgres', 'docker', {
-		host: 'localhost',
+	adapter: new SqlAdapter('appointments', process.env.POSTGRES_USER || 'postgres', process.env.POSTGRES_PASSWORD || 'docker', {
+		host: process.env.POSTGRES_HOST || 'localhost',
 		port: 5432,
 		dialect: 'postgres' /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */,
 	
