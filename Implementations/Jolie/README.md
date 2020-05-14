@@ -212,7 +212,7 @@ $ curl -X "POST" "http://localhost:8081/appointments/"
 ```
 Start time and end time only accept integer values between 8 and 18 and the date has to be in the format DD.MM.YYYY.
 If your appointment has no conflicts with other appointments and fullfills all constraints (minduration <= duration => maxduration and start_time < end_time) 
-it will be confirmed by a pop-up, created by the Confirmation microservice, otherwise you will receive an error message on the commandline.
+it will be confirmed by a console log in the Confirmation microservice, otherwise you will receive an error message on the commandline.
 
 #### Further Functions
 
