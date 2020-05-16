@@ -46,3 +46,15 @@ services:
     restart: on-failure
     depends_on: 
       - rabbitmq
+  prometheus:
+    image: prom/prometheus:v2.13.1
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus-docker.yml:/etc/prometheus/prometheus.yml
+    command: --config.file=/etc/prometheus/prometheus.yml
+    restart: on-failure
+    depends_on:
+      - treatments
+      - appointments
+      - confirmation

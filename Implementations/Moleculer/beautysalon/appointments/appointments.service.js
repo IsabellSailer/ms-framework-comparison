@@ -17,8 +17,8 @@ module.exports = {
 	 * Mixins
 	 */
 	mixins: [DbService],
-	adapter: new SqlAdapter('appointments', process.env.POSTGRES_USER || 'postgres', process.env.POSTGRES_PASSWORD || 'docker', {
-		host: process.env.POSTGRES_HOST || 'localhost',
+	adapter: new SqlAdapter('appointments', process.env.POSTGRES_USER, process.env.POSTGRES_PASSWORD, {
+		host: process.env.POSTGRES_HOST,
 		port: 5432,
 		dialect: 'postgres' /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */,
 	

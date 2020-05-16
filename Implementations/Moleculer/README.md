@@ -104,19 +104,16 @@ The commands for running the three microservices of the Beauty Salon application
 
 ```bash
 user:~/beautysalon/treatments$ npm install
-user:~/beautysalon/treatments$ export SERVICES=treatments,api
 user:~/beautysalon/treatments$ npm start
 ```
 
 ```bash
 user:~/beautysalon/appointments$ npm install
-user:~/beautysalon/appointments$ export SERVICES=appointments,api
 user:~/beautysalon/appointments$ npm start
 ```
 
 ```bash
 user:~/beautysalon/confirmation$ npm install
-user:~/beautysalon/confirmation$ export SERVICES=confirmation
 user:~/beautysalon/confirmation$ npm start
 ```
 
@@ -194,6 +191,7 @@ If you want to create a new treatment you have to send a POST request to the tre
 ```bash
 $ curl -X "POST" "http://localhost:<port-nr>/treatments/" \
      -H 'Content-Type: application/json; charset=utf-8' \
+     -H 'Authorization: Basic YWRtaW46YWRtaW4=' \
      -d $'{
   "id": <id>,
   "name": "<name>",

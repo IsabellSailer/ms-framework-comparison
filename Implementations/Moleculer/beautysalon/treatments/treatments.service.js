@@ -49,7 +49,7 @@ module.exports = {
     dependencies: [],
     
 	mixins: [DbService],
-	adapter: new MongoDBAdapter(process.env.MONGO_URI || "mongodb://localhost:27017/beautysalon", mongoOptions),
+	adapter: new MongoDBAdapter(process.env.MONGO_URI, mongoOptions),
 	collection: "treatments",
 
 	/**
