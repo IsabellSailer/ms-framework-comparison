@@ -13,6 +13,7 @@ ID=$5
 
 curl -X "POST" "http://localhost:${PORT}/treatments" \
      -H 'Content-Type: application/json; charset=utf-8' \
+     -H 'Authorization: Basic YWRtaW46YWRtaW4=' \
      -d $'{
   "id": '${ID}',
   "name": "'"${NAME}"'",
