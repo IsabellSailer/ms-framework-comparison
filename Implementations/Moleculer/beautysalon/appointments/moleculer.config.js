@@ -176,16 +176,21 @@ module.exports = {
 		enabled: true,
 		// Available built-in exporters: "Console", "Datadog", "Event", "EventLegacy", "Jaeger", "Zipkin"
 		exporter: {
-			type: "Console", // Console exporter is only for development!
+			type: "Zipkin", // Console exporter is only for development!
 			options: {
-				// Custom logger
-				logger: null,
-				// Using colors
-				colors: true,
-				// Width of row
-				width: 100,
-				// Gauge width in the row
-				gaugeWidth: 40
+				// Base URL for Zipkin server.
+				baseURL: "http://localhost:9411",
+				// Sending time interval in seconds.
+				interval: 5,
+				// Additional payload options.
+				payloadOptions: {
+					// Set `debug` property in payload.
+					debug: false,
+					// Set `shared` property in payload.
+					shared: false
+				},
+				// Default tags. They will be added into all span tags.
+				defaultTags: null
 			}
 		}
 	},

@@ -27,6 +27,7 @@ Additionally, you can also build and run the containers individually. First, you
 
 ```bash
 $ docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3
+$ docker run -d --name zipkin -p 9411:9411 openzipkin/zipkin:2.17.0
 $ docker run --name treatments-db -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=docker -p 27017:27017 -d mongo:4
 $ docker run --name appointments-db -d -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=docker -e POSTGRES_DB=appointments postgres:12-alpine
 ```
@@ -52,6 +53,12 @@ user:~/beautysalon/appointments$ docker run --name appointments --link appointme
 ```bash
 user:~/beautysalon/confirmation$ docker build -t beautysalon-moleculer/confirmation:1.0 .
 user:~/beautysalon/confirmation$ docker run --name confirmation --link rabbitmq -d beautysalon-moleculer/confirmation:1.0
+```
+
+#### Prometheus
+
+```bash
+$ docker run -d --name prometheus -p 9090:9090 --link confirmation -v ./prometheus-docker.yml:/etc/prometheus/prometheus.yml --restart on-failure prom/prometheus:v2.13.1 --config.file=/etc/prometheus/prometheus.yml
 ```
 
 ## Services locally
@@ -84,10 +91,14 @@ $ sudo apt-get install docker-ce docker-ce-cli containerd.io
 
 #### Starting the supporting services
 
-Before running the application, you have to start RabbitMQ, MongoDB and PostgreSQL
+Before running the application, you have to start RabbitMQ, zipkin, MongoDB and PostgreSQL
 
 ```bash
 $ sudo docker run -d -p 5672:5672 -p 15672:15672 rabbitmq:3
+```
+
+```bash
+$ sudo docker run -d --name zipkin -p 9411:9411 openzipkin/zipkin:2.17.0
 ```
 
 ```bash

@@ -1,7 +1,10 @@
 version: "3.7"
 
 services:
-
+  zipkin:
+    image: openzipkin/zipkin:2.17.0
+    ports:
+      - "9411:9411"
   rabbitmq:
     image: rabbitmq:3
     ports:
@@ -39,6 +42,7 @@ services:
     restart: on-failure
     depends_on:
       - rabbitmq
+      - zipkin
       - appointments-db
   confirmation:
     build: ./confirmation
