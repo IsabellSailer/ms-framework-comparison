@@ -1,4 +1,4 @@
-package beautysalon.confirmation.msimpl;
+package confirmation.msimpl;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;

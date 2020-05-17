@@ -1,4 +1,4 @@
-package beautysalon.treatments.msimpl;
+package treatments.msimpl;
 
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
@@ -29,7 +29,7 @@ public class TreatmentRepository {
 	}
 
 	public Treatment save(@NotNull Integer id, @NotBlank String name, @NotNull BigDecimal price,
-			@NotNull Integer minduration, @NotNull Integer maxduration)  {
+														@NotNull Integer minduration, @NotNull Integer maxduration)  {
 		RedisCommands<String, String> redisCommands = redisConnection.sync();
 
 		redisCommands.hset(Integer.toString(id), "name", name);

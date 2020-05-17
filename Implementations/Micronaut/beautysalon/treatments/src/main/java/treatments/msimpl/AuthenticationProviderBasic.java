@@ -1,4 +1,4 @@
-package beautysalon.treatments.msimpl;
+package treatments.msimpl;
 
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;

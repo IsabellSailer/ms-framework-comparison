@@ -1,4 +1,4 @@
-package beautysalon.appointments.msimpl;
+package appointments.msimpl;
 
 import io.micronaut.configuration.hibernate.jpa.scope.CurrentSession;
 import io.micronaut.spring.tx.annotation.Transactional;

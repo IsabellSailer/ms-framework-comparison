@@ -1,5 +1,6 @@
-package beautysalon.appointments.msimpl;
+package appointments.msimpl;
 
+import appointments.msimpl.Appointment;
 import io.micronaut.configuration.rabbitmq.annotation.Binding;
 import io.micronaut.configuration.rabbitmq.annotation.RabbitClient;
 

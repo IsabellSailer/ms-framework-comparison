@@ -1,4 +1,4 @@
-package beautysalon.appointments.msimpl;
+package appointments.msimpl;
 
 
 import javax.validation.constraints.NotNull;

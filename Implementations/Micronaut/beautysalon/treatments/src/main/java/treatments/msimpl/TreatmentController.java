@@ -1,4 +1,4 @@
-package beautysalon.treatments.msimpl;
+package treatments.msimpl;
 
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;

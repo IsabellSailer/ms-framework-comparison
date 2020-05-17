@@ -18,7 +18,7 @@ test {
 	options.compilerArgs.add('-parameters')
 }
 
-mainClassName = "beautysalon.appointments.Application"
+mainClassName = "appointments.Application"
 
 dependencies {
     annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")

@@ -1,4 +1,4 @@
-package beautysalon.confirmation.msimpl;
+package confirmation.msimpl;
 
 import com.rabbitmq.client.BuiltinExchangeType;
 import com.rabbitmq.client.Channel;

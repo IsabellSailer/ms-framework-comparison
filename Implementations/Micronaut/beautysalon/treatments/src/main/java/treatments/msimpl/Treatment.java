@@ -1,4 +1,4 @@
-package beautysalon.treatments.msimpl;
+package treatments.msimpl;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.NotBlank;

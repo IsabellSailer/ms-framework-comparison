@@ -20,7 +20,7 @@ test {
 }
 
 
-mainClassName = "beautysalon.confirmation.Application"
+mainClassName = "confirmation.Application"
 
 dependencies {
     annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")

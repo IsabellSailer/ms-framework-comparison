@@ -1,4 +1,4 @@
-package beautysalon.appointments.msimpl;
+package appointments.msimpl;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;

@@ -1,4 +1,4 @@
-package beautysalon.appointments.msimpl;
+package appointments.msimpl;
 
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.annotation.Get;

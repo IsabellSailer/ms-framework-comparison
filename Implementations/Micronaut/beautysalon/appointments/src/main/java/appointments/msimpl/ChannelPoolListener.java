@@ -1,4 +1,4 @@
-package beautysalon.appointments.msimpl;
+package appointments.msimpl;
 
 import com.rabbitmq.client.BuiltinExchangeType;
 import com.rabbitmq.client.Channel;

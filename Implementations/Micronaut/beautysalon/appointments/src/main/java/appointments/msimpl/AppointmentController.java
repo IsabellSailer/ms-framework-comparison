@@ -1,5 +1,8 @@
-package beautysalon.appointments.msimpl;
+package appointments.msimpl;
 
+import appointments.msimpl.Appointment;
+import appointments.msimpl.AppointmentRepository;
+import appointments.msimpl.Treatment;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;

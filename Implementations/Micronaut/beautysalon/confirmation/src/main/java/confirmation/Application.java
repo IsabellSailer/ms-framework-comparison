@@ -1,4 +1,4 @@
-package beautysalon.confirmation;
+package confirmation;
 
 import io.micronaut.runtime.Micronaut;
 

@@ -1,4 +1,4 @@
-package beautysalon.appointments.msimpl;
+package appointments.msimpl;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;

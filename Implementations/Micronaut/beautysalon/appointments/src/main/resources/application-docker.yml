@@ -44,7 +44,7 @@ consul:
 jpa:
   default:
     packages-to-scan:
-      - 'beautysalon.appointments' 
+      - 'appointments' 
     properties:
       hibernate:
         hbm2ddl:

@@ -1,4 +1,4 @@
-package beautysalon.confirmation.msimpl;
+package confirmation.msimpl;
 
 import io.micronaut.configuration.rabbitmq.annotation.Queue;
 import io.micronaut.configuration.rabbitmq.annotation.RabbitListener;
@@ -10,7 +10,7 @@ public class ConfirmationListener {
 	
 	private final ConfirmationService confirmationService;
 	
-	public ConfirmationListener(ConfirmationService confirmationService) { 
+	public ConfirmationListener(ConfirmationService confirmationService) {
         this.confirmationService = confirmationService;
     }
 

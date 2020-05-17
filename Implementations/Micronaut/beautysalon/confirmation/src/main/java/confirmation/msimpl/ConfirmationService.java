@@ -1,6 +1,8 @@
-package beautysalon.confirmation.msimpl;
+package confirmation.msimpl;
 
 import javax.inject.Singleton;
+
+import confirmation.msimpl.Appointment;
 
 @Singleton
 public class ConfirmationService {
